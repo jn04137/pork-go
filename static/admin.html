@@ -1,0 +1,19 @@
+{{define "admin"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+    <link href="/static/output.css" rel="stylesheet">
+  </head>
+  <body class="flex flex-col">
+    {{template "navbar" .}}
+    <h1 class="text-4xl">Admin page</h1>
+    <p>This is the admin page</p>
+    {{template "textcard" .}}
+    <div id="test-area">
+      <p class="text-2xl">Hello {{.Name}}!</p>
+      <button hx-get="/admin/test" hx-target="#test-area" hx-swap="innerHTML">Click Me!</button>
+    </div>
+  </body>
+</html>
+{{end}}

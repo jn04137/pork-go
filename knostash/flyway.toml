@@ -1,0 +1,21 @@
+databaseType = "PostgreSql"
+name = "knostash"
+id = "3f862b32-4f88-42ce-bc88-893be4522c65"
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+schemaModel = "./schema-model"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[flyway]
+mixed = true
+outOfOrder = true
+locations = [ "filesystem:migrations" ]
+validateMigrationNaming = true
+
+[environments.knostash]
+url = "jdbc:postgresql://localhost:5432/knostash_db"
+schemas = [ "public" ]

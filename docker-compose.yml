@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: knostash_user
+      POSTGRES_DB: knostash_db
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+
+        #mysql:
+        #  image: mysql
+        #  restart: always
+        #  environment:
+        #    MYSQL_DATABASE: knostash_db
+        #    MYSQL_USER: knostash_user
+        #    MYSQL_PASSWORD: example
+        #    MYSQL_ROOT_PASSWORD: example
+        #  ports:
+        #    - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+
+  app:
+    image: wthunder/pork_go:multistage
+    environment:
+      DB_CONN: ${DB_CONN}
+      SMTP_PASS: ${SMTP_PASS}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
