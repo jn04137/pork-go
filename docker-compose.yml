@@ -31,13 +31,13 @@ services:
     depends_on:
       - postgres
 
-  app:
-    image: wthunder/pork_go:multistage
-    environment:
-      DB_CONN: ${DB_CONN}
-      SMTP_PASS: ${SMTP_PASS}
-      JWT_SECRET: ${JWT_SECRET}
-    ports:
-      - 8000:8000
-    depends_on:
-      - postgres
+        #app:
+        #  image: wthunder/pork_go
+        #  environment:
+        #    DB_CONN: ${DB_CONN}
+        #    SMTP_PASS: ${SMTP_PASS}
+        #    JWT_SECRET: ${JWT_SECRET}
+        #  ports:
+        #    - 8000:8000
+        #  depends_on:
+        #    - postgres

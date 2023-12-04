@@ -37,7 +37,7 @@
       {#each posts as post}
         <PostCard>
           <div slot="title"><Link to={`viewpost/${post.PostId}`}>{post.Title}</Link></div>
-          <p slot="body"><Link to={`viewpost/${post.PostId}`}>{@html JSON.parse(post.Body)}</Link></p>
+          <p slot="body"><Link to={`viewpost/${post.PostId}`}>{@html post.Body.replaceAll("^\"|$\"", "")}</Link></p>
           <div slot="author">{post.Owner}</div>
           <div slot="date">{new Date(post.CreatedAt).toLocaleString()}</div>
         </PostCard>

@@ -1,0 +1,3 @@
+export SMTP_PASS=XXXXXX
+export DB_CONN=XXXXXX
+export JWT_SECRET=XXXXXX
