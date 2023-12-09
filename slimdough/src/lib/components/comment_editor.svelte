@@ -25,8 +25,9 @@
       //content: '<p>Write your comment...</p>',
       onTransaction: () => {
         // force re-render so `editor.isActive` works as expected
-        //editor = editor
+        editor = editor
         editorHTML = editor.getHTML()
+        console.log(editorHTML)
       },
       editorProps: {
         attributes: {
@@ -41,9 +42,6 @@
       editor.destroy()
     }
   })
-
-  const handleCreateComment = async () => {
-  }
 
 </script>
 

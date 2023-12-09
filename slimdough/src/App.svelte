@@ -12,6 +12,7 @@
   import SignupPage from './pages/signup.svelte'
   import ViewPostPage from './pages/viewpost.svelte'
   import UserDashboard from './pages/user_dashboard.svelte'
+  import Admin from './pages/admin.svelte'
 
   export let url = ""
   const queryClient = new QueryClient()
@@ -32,6 +33,7 @@
           <ViewPostPage postId={params.id}/>
         </Route>
         <Route path="/userdashboard" component={UserDashboard}/>
+        <Route path="/admin" component={Admin}/>
       </div>
     </Router>
   </main>

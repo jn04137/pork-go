@@ -8,7 +8,7 @@
 
   let postData = {
     title: "",
-    body: null
+    body: ""
   }
 
   const handlePublish = async () => {

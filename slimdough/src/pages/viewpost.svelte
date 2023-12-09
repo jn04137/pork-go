@@ -11,7 +11,7 @@
   let post
 
   let createCommentData = {
-    body:null
+    body: "",
   }
 
   onMount(async () => {
@@ -22,6 +22,16 @@
       console.error(err)
     }
   })
+
+  const handleCreatePost = async () => {
+    try{
+      const response = await axios.post(`/api/createcomment/${postId}`, createCommentData, {
+        withCredentials: true
+      })
+    } catch(e) {
+      console.error(e)
+    }
+  } 
 
 </script>
 
@@ -43,7 +53,7 @@
             <div class="flex justify-end">
               <button 
                 class="bg-blue-500 text-white text-sm px-2 py-0.5 rounded-2xl shadow"
-                on:click|preventDefault={() => console.log("Comment button was logged")}
+                on:click|preventDefault={() => handleCreatePost()}
               >
                 Create Comment
               </button>

@@ -30,7 +30,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Need token to create the post with correct user as owner
 	token, err := jwt.ParseWithClaims(cookie.Value, &KnoAuthCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("testhash"), nil
+		return jwtSecret, nil
 	})
 	if err != nil {
 		log.Printf("This is the error: %v", err)

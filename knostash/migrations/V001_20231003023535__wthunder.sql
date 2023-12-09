@@ -60,10 +60,34 @@ CREATE TABLE "PointsOnPost"(
 );
 
 CREATE TABLE "PointsOnComment"(
-       ID Serial NOT NULL,
-       UserId int,
-       CommentId int,
-       Point PointType,
-       FOREIGN KEY (UserId) REFERENCES "UserAccount"(ID),
-       FOREIGN KEY (CommentId) REFERENCES "Comment"(ID)
+  ID Serial NOT NULL,
+  UserId int,
+  CommentId int,
+  Point PointType,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (UserId) REFERENCES "UserAccount"(ID),
+  FOREIGN KEY (CommentId) REFERENCES "Comment"(ID)
 );
+
+CREATE TABLE "ReportOnComment" (
+  ID Serial NOT NULL,
+  ReportingUser int NOT NULL,
+  CommentReported int NOT NULL,
+  Valid boolean DEFAULT FALSE,
+  Details varchar(350) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ReportingUser) REFERENCES "UserAccount"(ID),
+  FOREIGN KEY (CommentReported) REFERENCES "Comment"(ID)
+);
+
+CREATE TABLE "ReportOnPost"(
+  ID Serial NOT NULL,
+  ReportingUser int NOT NULL,
+  PostReported int NOT NULL,
+  Valid boolean DEFAULT FALSE,
+  Details varchar(350) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ReportingUser) REFERENCES "UserAccount"(ID),
+  FOREIGN KEY (PostReported) REFERENCES "UserPost"(ID)
+);
+

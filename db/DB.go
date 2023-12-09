@@ -13,7 +13,6 @@ var DB *sql.DB
 var connStr string = os.Getenv("DB_CONN")
 
 func Open() error {
-  log.Printf("This is the connection string: %v", connStr)
 	var err error
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {

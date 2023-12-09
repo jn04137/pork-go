@@ -61,7 +61,7 @@ func main() {
 			render.JSON(w, r, data)
 		})
 		r.Post("/createpost", controllers.CreatePostHandler)
-		r.Post("/createcomment", controllers.CreateCommentHandler)
+		r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
 	})
 
 	// This is the route for auth based endpoints (login, signup, etc.)

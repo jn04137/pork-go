@@ -13,6 +13,9 @@ import (
 )
 
 func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
+  postId, parseErr := strconv.Atoi(chi.URLParam(r, "postId")); if parseErr != nil {
+    log.Printf("parse error")
+  }
 	cookie, cookieErr := r.Cookie("jwtCookie")
 	if cookieErr != nil {
 		log.Printf("This is the cookieErr: %v", cookieErr)
@@ -22,14 +25,14 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := &CommentReq{}
 	if bindErr := render.Bind(r, data); bindErr != nil {
-		log.Printf("Binding error")
+    log.Printf("Binding error: %v", bindErr)
         render.Render(w, r, ErrNotFound)
         return
 	}
 
 	// Need token to create the comment with correct user as owner
 	token, err := jwt.ParseWithClaims(cookie.Value, &KnoAuthCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("testhash"), nil
+		return jwtSecret, nil
 	})
 	if err != nil {
 		log.Printf("This is the error: %v", err)
@@ -59,7 +62,7 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	// Insert the relation into the junction table
 	query = `INSERT INTO "CommentOnPost" (CommentId, PostId)
 		VALUES ($1, $2)`
-	_, qErr = tx.ExecContext(ctx, query, commentId, data.PostId); if qErr != nil {
+	_, qErr = tx.ExecContext(ctx, query, commentId, postId); if qErr != nil {
 		log.Printf("This is the query error: %v", qErr)
         render.Render(w, r, ErrNotFound)
         return
@@ -127,7 +130,6 @@ type CommentModel struct {
 
 type Comment struct {
 	Body 	string 	`json:"body"`
-	PostId 	int 	`json:"postId"`
 }
 
 type CommentReq struct {
