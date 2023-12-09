@@ -20,6 +20,7 @@
       await axios.post("http://localhost:8000/api/createpost", postData, {
         withCredentials: true
       })
+      console.log(postData)
     } catch(e) {
       console.error(e)
     }

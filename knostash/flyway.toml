@@ -16,6 +16,8 @@ outOfOrder = true
 locations = [ "filesystem:migrations" ]
 validateMigrationNaming = true
 
-[environments.knostash]
+[environments.default]
 url = "jdbc:postgresql://localhost:5432/knostash_db"
 schemas = [ "public" ]
+user = "knostash_user"
+password = "example"

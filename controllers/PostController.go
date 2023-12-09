@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 	"log"
-	"encoding/json"
 	"strconv"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -41,6 +40,8 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, ErrNotFound)
 		return
 	}
+  
+  log.Printf("%v", data.Body)
 
 	query := `INSERT INTO 
         "UserPost" (Owner, Title, Body) 
@@ -145,7 +146,7 @@ type PostModel struct {
 
 type Post struct {
 	Title	string 			`json:"title"`
-	Body	json.RawMessage `json:"body"`
+	Body	string      `json:"body"`
 }
 
 type PostReq struct {

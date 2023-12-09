@@ -12,12 +12,6 @@ CREATE TABLE "UserAccount"(
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE "AdminRights"(
-        ID SERIAL NOT NULL,
-        UserId int UNIQUE NOT NULL,
-        FOREIGN KEY UserId REFERENCES (ID) FROM "UserAccount"
-);
-
 CREATE TABLE "UserPost"(
        ID Serial NOT NULL,
        Owner int,
