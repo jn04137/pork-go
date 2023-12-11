@@ -5,9 +5,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install -D tailwindcss
-RUN npx tailwindcss -i ./static/input.css -o ./static/output.css
-
 WORKDIR /app/slimdough
 
 RUN npm ci
@@ -18,7 +15,7 @@ FROM golang:1.21-bullseye AS build-server
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY go.* ./
 RUN go mod download # && go mod verify
 
 COPY . .
@@ -33,7 +30,6 @@ WORKDIR /
 RUN apt-get -y update
 RUN apt-get -y install ca-certificates
 
-COPY --from=build-frontend /app/static /static
 COPY --from=build-frontend /app/slimdough/dist /dist
 COPY --from=build-server /pork-go /pork-go
 

@@ -27,7 +27,6 @@
         // force re-render so `editor.isActive` works as expected
         editor = editor
         editorHTML = editor.getHTML()
-        console.log(editorHTML)
       },
       editorProps: {
         attributes: {

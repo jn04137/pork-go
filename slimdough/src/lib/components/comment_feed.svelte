@@ -29,7 +29,7 @@
     {#each $query.data.pages as {comments}}
       {#each comments as comment}
         <CommentCard>
-          <p slot="body">{@html JSON.parse(comment.Body)}</p>
+          <p slot="body">{@html comment.Body}</p>
           <div slot="author">{comment.Owner}</div>
           <div slot="date">{new Date(comment.CreatedAt).toLocaleString()}</div>
         </CommentCard>

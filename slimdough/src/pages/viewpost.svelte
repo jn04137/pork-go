@@ -44,7 +44,7 @@
         <div class="w-[650px] space-y-2">
           <PostCard>
             <h1 slot="title">{post.Title}</h1>
-            <p slot="body">{@html JSON.parse(post.Body)}</p>
+            <p slot="body">{@html post.Body}</p>
             <div slot="author">{post.Owner}</div>
             <div slot="date">{new Date(post.CreatedAt).toLocaleString()}</div>
           </PostCard>
