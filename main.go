@@ -43,6 +43,15 @@ func main() {
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 	}))
+  
+  r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+    responseData := map[string]interface{}{
+      "message": "pong",
+    }
+
+    render.Status(r, http.StatusOK)
+    render.JSON(w, r, responseData)
+  })
 
 	r.Route("/public", func(r chi.Router) {
 		r.Get("/getfeedposts/{page}", controllers.LoadFeedPost)
