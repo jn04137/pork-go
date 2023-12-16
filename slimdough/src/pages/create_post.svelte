@@ -17,7 +17,7 @@
       throw new Error("Title wasn't supplied")
     };
     try {
-      await axios.post("http://localhost:8000/api/createpost", postData, {
+      await axios.post("/api/createpost", postData, {
         withCredentials: true
       })
       console.log(postData)
