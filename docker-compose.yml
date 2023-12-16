@@ -37,6 +37,7 @@ services:
       DB_CONN: ${DB_CONN}
       SMTP_PASS: ${SMTP_PASS}
       JWT_SECRET: ${JWT_SECRET}
+      KNOSTASH_BACKEND_URL: ${KNOSTASH_BACKEND_URL}
     ports:
       - 8000:8000
     depends_on:
