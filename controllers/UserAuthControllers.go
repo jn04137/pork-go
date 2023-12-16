@@ -241,7 +241,7 @@ func IsLoggedInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err := jwt.ParseWithClaims(cookieValue.Value, &KnoAuthCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("testhash"), nil
+		return []byte(jwtSecret), nil
 	}); if err != nil {
 		render.Status(r, http.StatusUnauthorized)
 		render.JSON(w, r, responseData)
