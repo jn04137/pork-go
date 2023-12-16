@@ -1,4 +1,4 @@
 export SMTP_PASS=XXXXXX
 export DB_CONN=XXXXXX
 export JWT_SECRET=XXXXXX
-export BACKEND_URL=localhost
+export KNOSTASH_BACKEND_URL=http://localhost:8000
