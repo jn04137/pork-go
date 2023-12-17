@@ -11,7 +11,7 @@ RUN npm ci
 RUN npm run build
 
 # ===== Build stage of application =====
-FROM golang:1.21-bullseye AS build-server
+FROM golang:1.21-alpine3.19 AS build-server
 
 WORKDIR /app
 
@@ -23,12 +23,12 @@ COPY . .
 RUN go build -v -o /pork-go
 
 # ===== Deploy app bin into a lean image =====
-FROM debian:bullseye-slim AS build-release-stage
+FROM alpine:3.19.0 AS build-release-stage
 
 WORKDIR /
 
-RUN apt-get -y update
-RUN apt-get -y install ca-certificates
+#RUN apt-get -y update
+#RUN apt-get -y install ca-certificates
 
 COPY --from=build-frontend /app/slimdough/dist /dist
 COPY --from=build-server /pork-go /pork-go

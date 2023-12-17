@@ -19,7 +19,8 @@
   const query = createQuery({
     queryKey: ['isLoggedIn'],
     queryFn: () => isLoggedIn(),
-    refetchInterval: refetchIntervalMs
+    refetchInterval: refetchIntervalMs,
+    refetchOnWindowFocus: false
   })
 
   export let navs = [
