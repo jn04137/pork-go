@@ -20,7 +20,8 @@
     getNextPageParam: (lastPage) => {
       if (lastPage.nextCursor === null) { return undefined }
       return lastPage.nextCursor
-    }
+    },
+    refetchOnWindowFocus: false,
   })
 </script>
 
