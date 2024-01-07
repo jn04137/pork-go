@@ -1,15 +1,19 @@
-import { useLoaderData } from 'react-router-dom'
+import { useLoaderData, Params } from 'react-router-dom'
 import axios from 'axios'
 import Layout from '../components/layout'
-import { PostCard } from './home'
+import { PostCard, IPostData } from './home'
 import { EditorContent, useEditor } from '@tiptap/react'
 import Placeholder from '@tiptap/extension-placeholder'
-import React, { useState } from 'react'
+import React, { useState, Dispatch, SetStateAction } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-export async function loader({params}) {
+interface IPostContent {
+  content: IPostData;
+}
+
+export async function loader({params}: {params: Params<"postId">}) {
   try {
     const post = await axios.get(`/api/public/viewpost/${params.postId}`)
     const content = post.data.post
@@ -20,14 +24,14 @@ export async function loader({params}) {
 }
 
 function ViewPostPage() {
-  const { content } = useLoaderData()
-  const [newComment, setNewComment] = useState("")
+  const { content } = useLoaderData() as IPostContent
+  const [newComment, setNewComment] = useState<string>("")
 
   const commentData = {
     body: newComment
   }
 
-  const handleCreateComment = async (e: React.FormEvent<HTMLInputElement>) => {
+  const handleCreateComment = async (e: React.MouseEvent) => {
     e.preventDefault()
     try{
       const response = await axios.post(`/api/protected/createcomment/${content.PostId}`, commentData, {
@@ -49,14 +53,16 @@ function ViewPostPage() {
             date={content.CreatedAt}
             author={content.Owner}
           />
-          <CommentEditor setText={setNewComment}/>
-          <div className="flex justify-end">
-            <button 
-              className="bg-blue-500 text-white text-sm px-2 py-1 rounded shadow"
-              onClick={(e) => handleCreateComment(e)}
-            >
-              Create Comment
-            </button>
+          <div className="border shadow p-2">
+            <CommentEditor setText={setNewComment}/>
+            <div className="flex justify-end pt-2">
+              <button
+                className="bg-blue-500 text-white text-sm px-2 py-1 rounded"
+                onClick={(e) => handleCreateComment(e)}
+              >
+                Create Comment
+              </button>
+            </div>
           </div>
           <CommentFeed
             postId={content.PostId}
@@ -67,28 +73,38 @@ function ViewPostPage() {
   )
 }
 
-function CommentEditor({setText}) {
+function CommentEditor({setText}: {setText: Dispatch<SetStateAction<string>>}) {
   const extensions = [
     StarterKit,
     Placeholder.configure({
       placeholder: "Write your comment..."
     })
   ]
-  
+
   const editor = useEditor({
       extensions,
       editorProps: {
         attributes: {
-          class: 'border border-grey-300 shadow px-2 py-1.5 rounded min-h-[100px]'
+          class: 'py-1 rounded min-h-[60px]'
         }
       },
-      onUpdate: () => {setText(editor?.getHTML())},
+      onUpdate: () => {setText(editor!.getHTML())},
   })
 
-  return <EditorContent editor={editor} />
+  return (
+    <>
+      <h1 className="text-xs">Share your comment</h1>
+      <EditorContent editor={editor} />
+    </>
+  )
 
 }
 
+interface ICommentData {
+  Owner: string;
+  Body: string;
+  CreatedAt: string;
+}
 
 function CommentFeed({postId}: {postId: number}) {
 
@@ -127,7 +143,7 @@ function CommentFeed({postId}: {postId: number}) {
         <>
           {data.pages.map((pages, i) => (
             <React.Fragment key={i}>
-              {pages.comments.map((comment, j) => (
+              {pages.comments.map((comment: ICommentData, j: number) => (
                 <CommentCard
                   author={comment.Owner}
                   body={comment.Body}
@@ -143,7 +159,7 @@ function CommentFeed({postId}: {postId: number}) {
         <button
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
-          className="text-sm bg-blue-500 text-white rounded-2xl py-0.5 px-4"
+          className="text-sm bg-blue-500 text-white rounded py-0.5 px-4"
         >
           {isFetchingNextPage
             ? 'Loading more...'

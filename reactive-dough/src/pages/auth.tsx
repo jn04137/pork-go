@@ -18,7 +18,7 @@ function AuthPage() {
     passwordMatch: ""
   })
 
-  const handleLogin = async (e: React.FormEvent<HTMLInputElement>) => {
+  const handleLogin = async (e: React.MouseEvent) => {
     e.preventDefault()
     try {
       await axios.post("/api/public/login", loginData, {
@@ -33,7 +33,7 @@ function AuthPage() {
     }
   }
   
-  const handleSignup = async (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSignup = async (e: React.MouseEvent) => {
     e.preventDefault()
     try {
       if(signupData.password != signupData.passwordMatch) {
@@ -60,7 +60,7 @@ function AuthPage() {
         <div className="flex justify-center w-full">
           <div className="flex flex-col justify-center">
             <div className="bg-white rounded space-y-10 px-8 py-8 h-fit w-[350px]">
-              <form className="flex flex-col space-y-3" onSubmit={handleLogin}>
+              <form className="flex flex-col space-y-3">
                 <h1 className="text-2xl">Login</h1>
                 <input 
                   type="text" 
@@ -78,9 +78,13 @@ function AuthPage() {
                   className={inputClass}
                   onChange={e => setLoginData({...loginData, password:e.target.value})}
                 /> 
-                <button className={buttonClass} type="submit">Login</button>
+                <button
+                  className={buttonClass}
+                  onClick={handleLogin}
+                >
+                  Login</button>
               </form>
-              <form className="flex flex-col space-y-3" onSubmit={handleSignup}>
+              <form className="flex flex-col space-y-3">
                 <h1 className="text-2xl">Signup</h1>
                 <input 
                   type="text" 
@@ -106,7 +110,11 @@ function AuthPage() {
                   className={inputClass}
                   onChange={e => setSignupData({...signupData, passwordMatch: e.target.value})}
                 /> 
-                <button className={buttonClass} type="submit">Signup</button>
+                <button
+                  className={buttonClass}
+                  onClick={handleSignup}>
+                  Signup
+                </button>
               </form>
             </div>
           </div>

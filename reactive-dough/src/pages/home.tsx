@@ -28,7 +28,7 @@ function Home() {
   )
 }
 
-interface IPostData {
+export interface IPostData {
   PostId: number;
   Title: string;
   Owner: string;
@@ -90,7 +90,7 @@ function Feed() {
         <button
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
-          className="text-sm bg-blue-500 text-white rounded-2xl py-0.5 px-4"
+          className="text-sm bg-blue-500 text-white rounded py-0.5 px-4"
         >
           {isFetchingNextPage
             ? 'Loading more...'
@@ -108,7 +108,7 @@ interface IPostCardData {
   body: string;
   author: string;
   date: string;
-  postId: number;
+  postId?: number;
 }
 
 export function PostCard({title, body, author, date, postId}: IPostCardData) {

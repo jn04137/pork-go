@@ -4,7 +4,7 @@ import axios from 'axios'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import React, { useState } from 'react'
+import React, { useState, Dispatch, SetStateAction } from 'react'
 
 import "./custom.css"
 
@@ -19,7 +19,7 @@ function CreatePostPage() {
     body: body
   }
 
-  const handlePublish = async (e: React.FormEvent<HTMLInputElement>) => {
+  const handlePublish = async (e: React.MouseEvent) => {
     e.preventDefault()
     if(postData.title.length === 0) {
       alert("Please enter a title")
@@ -49,7 +49,7 @@ function CreatePostPage() {
           <div className="flex justify-end">
             <button
               onClick={(e) => handlePublish(e)}
-              className="bg-blue-500 text-white px-4 py-1 rounded-2xl shadow">
+              className="bg-blue-500 text-white text-sm px-4 py-1 rounded shadow">
               Publish
             </button>
           </div>
@@ -60,7 +60,7 @@ function CreatePostPage() {
   )
 }
 
-function TipTap({setText}) {
+function TipTap({setText}: {setText: Dispatch<SetStateAction<string>>}) {
   const extensions = [
     StarterKit,
     Placeholder.configure({
@@ -75,7 +75,7 @@ function TipTap({setText}) {
           class: 'border border-grey-300 px-2 py-1.5 rounded-b-lg min-h-[150px]'
         }
       },
-      onUpdate: () => {setText(editor?.getHTML())},
+      onUpdate: () => {setText(editor!.getHTML())},
   })
 
   return <EditorContent editor={editor} />
