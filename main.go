@@ -8,7 +8,6 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
-  "strings"
   "mime"
 
 	"banhbao/porkgo/controllers"
@@ -53,71 +52,40 @@ func main() {
     render.JSON(w, r, responseData)
   })
 
-	r.Route("/public", func(r chi.Router) {
-		r.Get("/getfeedposts/{page}", controllers.LoadFeedPost)
-		r.Get("/viewpost/{postId}", controllers.ViewPost)
-		r.Get("/loadcomments/{postId}/{commentCursor}", controllers.LoadCommentsHandler)
+
+	r.Route("/api/", func(r chi.Router) {
+    r.Route("/protected", func(r chi.Router) {
+      r.Use(porkmiddleware.JWTAuthMiddleware)
+      r.Get("/checktoken", func(w http.ResponseWriter, r *http.Request) {
+        data := &SomeJSONMsgResp{
+          Message: "This is the message",
+        }
+
+        render.Status(r, http.StatusOK)
+        render.JSON(w, r, data)
+      })
+      r.Post("/createpost", controllers.CreatePostHandler)
+      r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
+    })
+    r.Route("/public", func(r chi.Router) {
+      r.Get("/getfeedposts/{page}", controllers.LoadFeedPost)
+      r.Get("/viewpost/{postId}", controllers.ViewPost)
+      r.Get("/loadcomments/{postId}/{commentCursor}", controllers.LoadCommentsHandler)
+      r.Post("/signup", controllers.SignupHandler)
+      r.Post("/login", controllers.LoginHandler)
+      r.Get("/isloggedin", controllers.IsLoggedInHandler)
+      r.Get("/AuthEmailTest", controllers.AuthEmail)
+      r.Get("/verifyaccount/{token}", controllers.VerifyAccount)
+      r.Get("/resendaccountverificationtoken", controllers.VerifyAccount)
+      r.Route("/admin", func(r chi.Router) {
+      r.Get("/", controllers.AdminIndex)
+      r.Get("/test", controllers.AdminText)
 	})
-
-	r.Route("/api", func(r chi.Router) {
-		r.Use(porkmiddleware.JWTAuthMiddleware)
-		r.Get("/checktoken", func(w http.ResponseWriter, r *http.Request) {
-			data := &SomeJSONMsgResp{
-				Message: "This is the message",
-			}
-
-			render.Status(r, http.StatusOK)
-			render.JSON(w, r, data)
-		})
-		r.Post("/createpost", controllers.CreatePostHandler)
-		r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
-	})
-
-	// This is the route for auth based endpoints (login, signup, etc.)
-	r.Route("/auth", func(r chi.Router) {
-		r.Post("/signup", controllers.SignupHandler)
-		r.Post("/login", controllers.LoginHandler)
-		r.Get("/isloggedin", controllers.IsLoggedInHandler)
-    r.Get("/AuthEmailTest", controllers.AuthEmail)
-    r.Get("/verifyaccount/{token}", controllers.VerifyAccount)
-    r.Get("/resendaccountverificationtoken", controllers.VerifyAccount)
+    })
 	})
 	
-  r.Route("/admin", func(r chi.Router) {
-    r.Get("/", controllers.AdminIndex)
-    r.Get("/test", controllers.AdminText)
-	})
-
-  r.Handle("/static/*", http.StripPrefix("/static", http.FileServer(http.Dir("static"))))
-  r.Handle("/assets/*", http.StripPrefix("/assets", http.FileServer(http.Dir("/dist/assets"))))
-
-  fs := http.FileServer(http.Dir("/dist"))
-  r.Handle("/", fs)
-  r.Get("/*", func (w http.ResponseWriter, httpReq *http.Request) {
-    http.ServeFile(w, httpReq, "/dist/index.html")
-    return
-  })
 
 	http.ListenAndServe(":8000", r)
-}
-
-func FileServer(r chi.Router, path string, root http.FileSystem) {
-	if strings.ContainsAny(path, "{}*") {
-		log.Printf("FileServer does not permit any URL parameters.")
-	}
-
-	if path != "/" && path[len(path)-1] != '/' {
-		r.Get(path, http.RedirectHandler(path+"/", 301).ServeHTTP)
-		path += "/"
-	}
-	path += "*"
-
-	r.Get(path, func(w http.ResponseWriter, r *http.Request) {
-		rctx := chi.RouteContext(r.Context())
-		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
-		fs := http.StripPrefix(pathPrefix, http.FileServer(root))
-		fs.ServeHTTP(w, r)
-	})
 }
 
 type SomeJSONMsg struct {

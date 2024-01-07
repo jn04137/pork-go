@@ -78,7 +78,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
   toMsg := fmt.Sprintf("To: %v\n", data.Email)
   subject := "Subject: Test email from Go!\n"
   mime := "MIME-version: 1.0; \nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-  body := fmt.Sprintf("<html><body>Verify your account at this link: http://%v/auth/verifyaccount/%v</body></html>", backendUrl, ss)
+  body := fmt.Sprintf("<html><body>Verify your account at this link: http://%v/api/public/verifyaccount/%v</body></html>", backendUrl, ss)
   msg := []byte(fromMsg + toMsg + subject + mime + body)
 
   // Configuration for sending an email
@@ -90,7 +90,8 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		from, []string{to}, []byte(msg))
 
 	if emailErr != nil {
-		log.Printf("smtp error: %s", err)
+		log.Printf("smtp error: %v", err)
+		render.Render(w, r, ErrNotFound)
 		return
 	}
 
@@ -235,7 +236,7 @@ func IsLoggedInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	cookieValue, cookieErr := r.Cookie("jwtCookie")
 	if cookieErr != nil {
-		render.Status(r, http.StatusUnauthorized)
+		render.Status(r, http.StatusOK)
 		render.JSON(w, r, responseData)
         return
 	}
@@ -243,7 +244,7 @@ func IsLoggedInHandler(w http.ResponseWriter, r *http.Request) {
 	_, err := jwt.ParseWithClaims(cookieValue.Value, &KnoAuthCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtSecret), nil
 	}); if err != nil {
-		render.Status(r, http.StatusUnauthorized)
+		render.Status(r, http.StatusOK)
 		render.JSON(w, r, responseData)
         return
 	}

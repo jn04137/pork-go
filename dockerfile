@@ -1,14 +1,14 @@
 # ===== Build stage of frontend =====
-FROM node:20-alpine3.18 as build-frontend
-
-WORKDIR /app
-
-COPY . .
-
-WORKDIR /app/slimdough
-
-RUN npm ci
-RUN npm run build
+#FROM node:20-alpine3.18 as build-frontend
+#
+#WORKDIR /app
+#
+#COPY . .
+#
+#WORKDIR /app/slimdough
+#
+#RUN npm ci
+#RUN npm run build
 
 # ===== Build stage of application =====
 FROM golang:1.21-alpine3.19 AS build-server
@@ -30,7 +30,7 @@ WORKDIR /
 #RUN apt-get -y update
 #RUN apt-get -y install ca-certificates
 
-COPY --from=build-frontend /app/slimdough/dist /dist
+#COPY --from=build-frontend /app/slimdough/dist /dist
 COPY --from=build-server /pork-go /pork-go
 
 EXPOSE 8000
