@@ -68,6 +68,8 @@ function Feed() {
         <p>Loading...</p>
       ) : status === 'error' ? (
         <p>Error: {error.message}</p>
+      ) : data === null ? (
+        <p>There is no data</p>
       ) : (
         <>
           {data.pages.map((pages, i) => (
