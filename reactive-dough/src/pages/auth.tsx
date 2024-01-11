@@ -21,7 +21,7 @@ function AuthPage() {
   const handleLogin = async (e: React.MouseEvent) => {
     e.preventDefault()
     try {
-      await axios.post("/api/public/login", loginData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/public/login`, loginData, {
         withCredentials: true
       })
       navigate("/")
@@ -40,7 +40,7 @@ function AuthPage() {
         alert("Passwords do not match")
         throw new Error("Passwords do not match")
       }
-      await axios.post("/api/public/signup", signupData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/public/signup`, signupData, {
         withCredentials: true
       })
       return

@@ -10,7 +10,9 @@ export let navs = [
 
 const isLoggedIn = async () => {
   try {
-    const res = await axios.get("/api/public/isloggedin")
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/isloggedin`, {
+      withCredentials: true
+    })
     return res.data
   } catch(err) {
     console.error(err)

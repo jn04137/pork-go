@@ -1,18 +1,22 @@
 import Layout from '../components/layout'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-const endpoint = "/api/public/getfeedposts/"
 const fetchFeed = async ({ pageParam }: {pageParam: number}) => {
-  const response = await axios.get(endpoint+pageParam)
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/getfeedposts/${pageParam}`)
   return response.data
 }
 
+const apiURL = import.meta.env.VITE_API_URL
+
 function Home() {
+  useEffect(() => {
+    console.log(apiURL)
+  })
   return(
     <Layout>
       <div className="w-full">
@@ -52,6 +56,10 @@ function Feed() {
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined
   })
 
+  useEffect(() => {
+    if(status === 'success') console.log(data)
+  }, [])
+
   return(
     <div className="space-y-2.5 w-[650px]">
       <div className="rounded bg-white text-xl">Feed</div>
@@ -72,7 +80,7 @@ function Feed() {
         <p>There is no data</p>
       ) : (
         <>
-          {data.pages.map((pages, i) => (
+          { data.pages.map((pages, i) => (
             <React.Fragment key={i}>
               {pages.posts.map((post: IPostData) => (
                 <PostCard
