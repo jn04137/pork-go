@@ -26,7 +26,7 @@ function CreatePostPage() {
       throw new Error("Title wasn't supplied")
     };
     try {
-      await axios.post(`${import.meta.env.API_URL}/api/protected/createpost`, postData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/protected/createpost`, postData, {
         withCredentials: true
       })
     } catch(e) {
