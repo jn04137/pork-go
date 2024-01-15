@@ -15,7 +15,7 @@ interface IPostContent {
 
 export async function loader({params}: {params: Params<"postId">}) {
   try {
-    const post = await axios.get(`/api/public/viewpost/${params.postId}`)
+    const post = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/viewpost/${params.postId}`)
     const content = post.data.post
     return { content }
   } catch(error) {
@@ -34,7 +34,7 @@ function ViewPostPage() {
   const handleCreateComment = async (e: React.MouseEvent) => {
     e.preventDefault()
     try{
-      const response = await axios.post(`/api/protected/createcomment/${content.PostId}`, commentData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/protected/createcomment/${content.PostId}`, commentData, {
         withCredentials: true
       })
       return response
@@ -110,7 +110,7 @@ function CommentFeed({postId}: {postId: number}) {
 
   const fetchComments = async({ pageParam=0 }) => {
     try {
-      const response = await axios.get(`/api/public/loadcomments/${postId}/${pageParam}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/loadcomments/${postId}/${pageParam}`)
       return response.data
     } catch(err) {
       console.error(err)
