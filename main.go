@@ -38,7 +38,7 @@ func main() {
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowedHeaders:   []string{"X-PINGOTHER", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 	}))
@@ -51,7 +51,6 @@ func main() {
     render.Status(r, http.StatusOK)
     render.JSON(w, r, responseData)
   })
-
 
 	r.Route("/api/", func(r chi.Router) {
     r.Route("/protected", func(r chi.Router) {

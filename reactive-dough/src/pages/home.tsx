@@ -62,7 +62,7 @@ function Feed() {
 
   return(
     <div className="space-y-2.5 w-[650px]">
-      <div className="rounded bg-white text-xl">Feed</div>
+      <div className="px-2 py-1 rounded bg-white text-xl border shadow">Feed</div>
       <div className="border shadow bg-white rounded px-2 py-2">
         <Link to="/createpost">
           <div

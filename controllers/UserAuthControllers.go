@@ -78,7 +78,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
   toMsg := fmt.Sprintf("To: %v\n", data.Email)
   subject := "Subject: Test email from Go!\n"
   mime := "MIME-version: 1.0; \nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-  body := fmt.Sprintf("<html><body>Verify your account at this link: http://%v/api/public/verifyaccount/%v</body></html>", backendUrl, ss)
+  body := fmt.Sprintf("<html><body>Verify your account at this link: %v/api/public/verifyaccount/%v</body></html>", backendUrl, ss)
   msg := []byte(fromMsg + toMsg + subject + mime + body)
 
   // Configuration for sending an email
