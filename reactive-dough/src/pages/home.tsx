@@ -1,10 +1,16 @@
 import Layout from '../components/layout'
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { 
+  useInfiniteQuery, 
+  useQuery, 
+  useMutation, 
+  useQueryClient 
+} from '@tanstack/react-query'
 import axios from 'axios'
 import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 
 const fetchFeed = async ({ pageParam }: {pageParam: number}) => {
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/getfeedposts/${pageParam}`)
@@ -14,9 +20,6 @@ const fetchFeed = async ({ pageParam }: {pageParam: number}) => {
 const apiURL = import.meta.env.VITE_API_URL
 
 function Home() {
-  useEffect(() => {
-    console.log(apiURL)
-  })
   return(
     <Layout>
       <div className="w-full">
@@ -118,7 +121,7 @@ interface IPostCardData {
   body: string;
   author: string;
   date: string;
-  postId?: number;
+  postId: number;
 }
 
 export function PostCard({title, body, author, date, postId}: IPostCardData) {
@@ -134,13 +137,16 @@ export function PostCard({title, body, author, date, postId}: IPostCardData) {
       <div className='pt-1 pb-2 text-sm h-fit'>
         <TipTap content={body}/>
       </div>
-      <div className='flex flex-col text-xs'>
-        <div>
-          {author}
+      <div className="flex justify-between">
+        <div className='flex flex-col text-xs'>
+          <div>
+            {author}
+          </div>
+          <div className='italic'>
+            {new Date(date).toLocaleString()}
+          </div>
         </div>
-        <div className='italic'>
-          {new Date(date).toLocaleString()}
-        </div>
+        <PostCardPoints postId={postId}/>
       </div>
     </div>
   )
@@ -160,6 +166,79 @@ function TipTap({content}: {content: string}) {
       <BubbleMenu>This is the bubble menu</BubbleMenu>
       <FloatingMenu>This is the floating menu</FloatingMenu>
     </EditorProvider>
+  )
+}
+
+function PostCardPoints({postId}: {postId: number}) {
+  
+  const queryClient = useQueryClient()
+
+  const getPoints = async () => {
+    try {
+      const response = await axios.get(`${apiURL}/api/public/post/points/${postId}`)
+      return response.data
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const addPoint = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/public`)
+      return response.data
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  //const removePoint = async () => {
+  //  try {
+  //    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public`)
+  //    return response.data
+  //  } catch (e) {
+
+  //  }
+  //}
+
+  const pointsQuery = useQuery({
+    queryKey: ['postPoints', postId],
+    queryFn: getPoints
+  })
+
+  ///useEffect(() => {
+  ///  if(pointsQuery.isSuccess) console.log(pointsQuery.data)
+  ///})
+
+  const addPointMutation = useMutation({
+    mutationFn: addPoint,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['postPoints', postId], data)
+    }
+  })
+
+  //const removePointMutation = useMutation({
+  //  queryKey: ['postpoints', postId],
+  //  queryFn: () => return
+  //})
+
+
+  return(
+    <div className="flex justify-between divide-x items-center border rounded">
+      <button 
+        className="flex items-center px-2 h-full"
+        onClick={() => addPointMutation.mutate()}
+      >
+        <HiChevronUp size={20}/>
+      </button>
+      <div className="flex items-center px-4 h-full">
+        {
+          pointsQuery.isSuccess ? pointsQuery.data.points : 0
+        }
+      </div>
+      <button className="flex items-center px-2 h-full">
+        <HiChevronDown size={20}/>
+      </button>
+    </div>
   )
 }
 

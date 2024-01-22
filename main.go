@@ -70,6 +70,7 @@ func main() {
       r.Get("/getfeedposts/{page}", controllers.LoadFeedPost)
       r.Get("/viewpost/{postId}", controllers.ViewPost)
       r.Get("/loadcomments/{postId}/{commentCursor}", controllers.LoadCommentsHandler)
+      r.Get("/post/points/{postId}", controllers.GetPostPoints)
       r.Post("/signup", controllers.SignupHandler)
       r.Post("/login", controllers.LoginHandler)
       r.Get("/isloggedin", controllers.IsLoggedInHandler)
