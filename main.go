@@ -65,6 +65,8 @@ func main() {
       })
       r.Post("/createpost", controllers.CreatePostHandler)
       r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
+      r.Post("/post/addpoints/{postId}", controllers.AddPointToPostHandler)
+      r.Post("/post/removepoints/{postId}", controllers.RemovePointFromPostHandler)
     })
     r.Route("/public", func(r chi.Router) {
       r.Get("/getfeedposts/{page}", controllers.LoadFeedPost)
