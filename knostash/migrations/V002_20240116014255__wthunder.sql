@@ -1,0 +1,1 @@
+ALTER TABLE "PointsOnPost" ADD CONSTRAINT UC_User_Post UNIQUE (UserId, PostId);

@@ -6,3 +6,9 @@
 This repository holds the frontend and backend for satch3l.com. The goal of satch3l
 is to serve as a knowledge bank of IT related notes, documentation, and tips.
 * Things TODO
+** TODO Create points system for posts
+** TODO Reporting system for posts
+** TODO Create points system for comments
+** TODO Reporting system for comments
+** TODO Flush out contact page
+** TODO Flush out profile page
