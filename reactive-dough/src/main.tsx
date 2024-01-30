@@ -9,6 +9,7 @@ import Home from './pages/home'
 import AuthPage from './pages/auth'
 import CreatePostPage from './pages/createpost/createpostpage'
 import ViewPostPage from './pages/viewpostpage'
+import MyProfilePage from './pages/myprofile'
 
 import {
   createBrowserRouter,
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/myprofile",
-    element: <div>This is the profile page</div>
+    element: <MyProfilePage/>
   },
   {
     path: "/contact",

@@ -57,9 +57,9 @@ function AuthPage() {
 
   return(
       <Layout>
-        <div className="flex justify-center w-full">
+        <div className="flex pt-4 justify-center w-full">
           <div className="flex flex-col justify-center">
-            <div className="bg-white rounded space-y-10 px-8 py-8 h-fit w-[350px]">
+            <div className="bg-[#2e2e2e] rounded space-y-10 px-8 py-8 h-fit w-[350px]">
               <form className="flex flex-col space-y-3">
                 <h1 className="text-2xl">Login</h1>
                 <input 

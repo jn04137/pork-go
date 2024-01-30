@@ -52,12 +52,13 @@ function ViewPostPage() {
             body={content.Body}
             date={content.CreatedAt}
             author={content.Owner}
+            postId={content.PostId}
           />
-          <div className="border shadow p-2">
+          <div className="dark:bg-[#2e2e2e] px-5 py-3">
             <CommentEditor setText={setNewComment}/>
             <div className="flex justify-end pt-2">
               <button
-                className="bg-blue-500 text-white text-sm px-2 py-1 rounded"
+                className="dark:bg-blue-600 text-white text-sm px-2 py-1 rounded"
                 onClick={(e) => handleCreateComment(e)}
               >
                 Create Comment
@@ -180,8 +181,8 @@ interface ICommentCardProps {
 
 function CommentCard({body, author, date}: ICommentCardProps) {
   return(
-    <div className="bg-white rounded border px-4 py-2 shadow">
-      <div className='py-2 text-sm'>
+    <div className="dark:bg-[#2e2e2e] rounded px-5 py-4 shadow">
+      <div className='text-sm'>
         <TipTap content={body}/>
       </div>
       <div className='flex flex-col text-xs'>

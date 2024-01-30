@@ -1,5 +1,5 @@
 import Layout from '../components/layout'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { 
   useInfiniteQuery, 
@@ -12,6 +12,10 @@ import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 
+const cardBgColor = "[#2e2e2e]"
+//const cardBgColor = "[#1f1b24]"
+//const cardBgColor = "[#414141]"
+
 const fetchFeed = async ({ pageParam }: {pageParam: number}) => {
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/getfeedposts/${pageParam}`)
   return response.data
@@ -23,9 +27,9 @@ function Home() {
   return(
     <Layout>
       <div className="w-full">
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 pt-3">
           <Feed/>
-          <div className="bg-white rounded grow h-fit p-2">
+          <div className="rounded grow h-fit p-2">
             <h1 className="text-2xl">Welcome!</h1>
             <p className="text-sm">Make yourself at home</p>
           </div>
@@ -59,18 +63,19 @@ function Feed() {
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined
   })
 
-  useEffect(() => {
-    if(status === 'success') console.log(data)
-  }, [])
+  //useEffect(() => {
+  //  if(status === 'success') console.log(data)
+  //}, [])
 
   return(
-    <div className="space-y-2.5 w-[650px]">
-      <div className="px-2 py-1 rounded bg-white text-xl border shadow">Feed</div>
-      <div className="border shadow bg-white rounded px-2 py-2">
+    <div className="space-y-2.5 w-[550px]">
+      {/* }<div className={`px-4 py-2.5 rounded text-xl dark:bg-${cardBgColor}`}>Feed</div> */}
+      <div className={`rounded text-xl`}>Feed</div>
+      <div className={`rounded px-2 py-2 dark:bg-${cardBgColor}`}>
         <Link to="/createpost">
           <div
-            className="border border-grey-300 px-2 py-1 text-[#C0C0C0] bg-[#F8F8F8] rounded-lg border-2 
-            hover:cursor-text hover:bg-white">
+            className="px-2 py-1 text-[#C0C0C0] rounded
+            bg-[#212121] hover:cursor-text dark:hover:bg-[#121212]">
             Create a post
           </div>
         </Link>
@@ -128,7 +133,7 @@ export function PostCard({title, body, author, date, postId}: IPostCardData) {
   //let instance = new Date()
   
   return(
-    <div className="bg-white border rounded px-4 py-2 shadow">
+    <div className={`dark:bg-${cardBgColor} rounded px-4 py-2`}>
       <div className='text-[24px] font-semibold'>
       <Link to={`/viewpost/${postId}`}>
         {title}
@@ -170,35 +175,34 @@ function TipTap({content}: {content: string}) {
 }
 
 function PostCardPoints({postId}: {postId: number}) {
+  type IUserPointing = {
+    pointing: string
+  }
   
   const queryClient = useQueryClient()
 
   const getPoints = async () => {
     try {
-      const response = await axios.get(`${apiURL}/api/public/post/points/${postId}`)
+      const response = await axios.get(`${apiURL}/api/public/post/points/${postId}`, {
+        withCredentials: true
+      })
       return response.data
     } catch (e) {
       console.log(e)
     }
   }
 
-  const addPoint = async () => {
+  const mutatePointsAPI = async (userPointing: IUserPointing) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/public`)
+      const response = await axios.post(`${apiURL}/api/protected/mutatepostpoint/${postId}`,
+      userPointing, {
+        withCredentials: true
+      })
       return response.data
     } catch (e) {
       console.log(e)
     }
   }
-
-  //const removePoint = async () => {
-  //  try {
-  //    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public`)
-  //    return response.data
-  //  } catch (e) {
-
-  //  }
-  //}
 
   const pointsQuery = useQuery({
     queryKey: ['postPoints', postId],
@@ -209,33 +213,31 @@ function PostCardPoints({postId}: {postId: number}) {
   ///  if(pointsQuery.isSuccess) console.log(pointsQuery.data)
   ///})
 
-  const addPointMutation = useMutation({
-    mutationFn: addPoint,
+  const userPointingMutation = useMutation({
+    mutationFn: mutatePointsAPI,
     onSuccess: (data) => {
+      console.log(data)
       queryClient.setQueryData(['postPoints', postId], data)
     }
   })
 
-  //const removePointMutation = useMutation({
-  //  queryKey: ['postpoints', postId],
-  //  queryFn: () => return
-  //})
-
-
   return(
     <div className="flex justify-between divide-x items-center border rounded">
       <button 
-        className="flex items-center px-2 h-full"
-        onClick={() => addPointMutation.mutate()}
+        className="flex items-center px-2 h-full hover:bg-blue-600"
+        onClick={() => userPointingMutation.mutate({pointing: 'plus'})}
       >
         <HiChevronUp size={20}/>
       </button>
-      <div className="flex items-center px-4 h-full">
-        {
-          pointsQuery.isSuccess ? pointsQuery.data.points : 0
-        }
-      </div>
-      <button className="flex items-center px-2 h-full">
+        <div className="flex items-center w-16 items-center text-center h-full">
+          <div className="text-center w-full">
+            {pointsQuery.isSuccess ? pointsQuery.data.points : 0}
+          </div>
+        </div>
+      <button 
+        className="flex items-center px-2 h-full hover:bg-blue-600"
+        onClick={() => userPointingMutation.mutate({pointing: 'minus'})}
+      >
         <HiChevronDown size={20}/>
       </button>
     </div>

@@ -64,9 +64,9 @@ func main() {
         render.JSON(w, r, data)
       })
       r.Post("/createpost", controllers.CreatePostHandler)
-      r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
-      r.Post("/post/addpoints/{postId}", controllers.AddPointToPostHandler)
+      r.Post("/mutatepostpoint/{postId}", controllers.MutatePointToPostHandler)
       r.Post("/post/removepoints/{postId}", controllers.RemovePointFromPostHandler)
+      r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
     })
     r.Route("/public", func(r chi.Router) {
       r.Get("/getfeedposts/{page}", controllers.LoadFeedPost)

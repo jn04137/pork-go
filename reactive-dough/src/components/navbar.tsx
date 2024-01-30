@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 export let navs = [
   { id: 0, endpoint: '/', page: 'Home' },
   //{ endpoint: '/about', page: 'About' },
-  { id: 1, endpoint: '/contact', page: 'Contact' }
+  //{ id: 1, endpoint: '/contact', page: 'Contact' }
 ]
 
 const isLoggedIn = async () => {
@@ -29,7 +29,7 @@ function Navbar() {
 
 
   return(
-    <div className='flex justify-center shadow-lg'>
+    <div className='flex justify-center shadow-lg bg-[#333333]'>
       <div className='flex justify-between py-2 w-[1000px] items-center'>
         <div className='text-lg font-bold'><Link to="/">satch3l</Link></div>
         <div className="flex space-x-4 items-center text-sm">

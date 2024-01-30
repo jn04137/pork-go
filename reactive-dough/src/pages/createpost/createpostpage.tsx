@@ -37,11 +37,11 @@ function CreatePostPage() {
 
   return(
     <Layout>
-      <div className="flex justify-center pt-10">
-        <form className="bg-white border rounded p-4 w-[650px] space-y-1 shadow">
+      <div className="flex justify-center pt-10 ">
+        <form className="dark:bg-[#2e2e2e] rounded p-4 w-[650px] space-y-1">
           <input 
-            placeholder="title" 
-            className="text-xl rounded-t-lg py-0.5 px-2 border border-grey-300 w-full"
+            placeholder="enter title" 
+            className="dark:bg-[#2e2e2e] text-xl py-0.5 px-2 w-full focus:outline-none border-b"
             onChange={e => setTitle(e.target.value)}
             required
           />
@@ -72,7 +72,7 @@ function TipTap({setText}: {setText: Dispatch<SetStateAction<string>>}) {
       extensions,
       editorProps: {
         attributes: {
-          class: 'border border-grey-300 px-2 py-1.5 rounded-b-lg min-h-[150px]'
+          class: 'px-2 py-1.5 rounded-b-lg min-h-[150px]'
         }
       },
       onUpdate: () => {setText(editor!.getHTML())},
