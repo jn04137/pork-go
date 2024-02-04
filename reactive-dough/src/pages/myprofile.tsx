@@ -4,7 +4,9 @@ function MyProfilePage() {
 
   return(
     <Layout>
-      This is the profile page
+      <div>
+        <h1 className="text-2xl">My Profile</h1>
+      </div>
     </Layout>
   )
 }

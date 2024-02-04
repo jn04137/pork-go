@@ -52,7 +52,7 @@ function AuthPage() {
     navigate("/", { replace: true})
   }
   
-  const inputClass = "border border-grey-300 px-2 py-2 rounded"
+  const inputClass = "dark:bg-[#212121] px-2 py-2 rounded decoration-none focus:outline-none"
   const buttonClass = "bg-blue-500 rounded-2xl text-white py-1"
 
   return(
