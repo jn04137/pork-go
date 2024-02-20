@@ -19,14 +19,15 @@ const isLoggedIn = async () => {
   }
 }
 
-function Navbar() {
-  const loggedInQuery = useQuery({
-      queryKey: ['userLoggedIn'],
-      queryFn: isLoggedIn,
-      refetchOnWindowFocus: false,
-      refetchInterval: 300000
-  })
+export const loggedInQuery = () => useQuery({
+    queryKey: ['userLoggedIn'],
+    queryFn: isLoggedIn,
+    refetchOnWindowFocus: false,
+    refetchInterval: 300000
+})
 
+function Navbar() {
+  const { data, isSuccess } = loggedInQuery()
 
   return(
     <div className='flex justify-center shadow-lg bg-[#333333]'>
@@ -38,7 +39,7 @@ function Navbar() {
               return <Link to={nav.endpoint} key={nav.id}>{nav.page}</Link>
             })}
           </nav>
-          {!loggedInQuery.isLoading && <AuthButton loggedIn={loggedInQuery.data.isLoggedIn}/>}
+          {isSuccess && <AuthButton loggedIn={data.isLoggedIn}/>}
         </div>
       </div>
     </div>

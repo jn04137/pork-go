@@ -3,9 +3,10 @@ package porkmiddleware
 import (
 	"github.com/go-chi/render"
 	"github.com/golang-jwt/jwt/v5"
+	"context"
 	"log"
 	"net/http"
-  "os"
+	"os"
 )
 
 // middleware
@@ -17,7 +18,7 @@ func JWTAuthMiddleware(next http.Handler) http.Handler {
 
 		cookieValue, cookieErr := r.Cookie("jwtCookie")
 		if cookieErr != nil {
-			render.Render(w, r, ErrNotFound)
+			next.ServeHTTP(w, r)
 			return
 		}
 
@@ -26,27 +27,34 @@ func JWTAuthMiddleware(next http.Handler) http.Handler {
 		})
 
 		if err != nil {
-			log.Printf("This is the error: %v", err)
-			render.Render(w, r, ErrNotFound)
+			next.ServeHTTP(w, r)
 			return
 		}
-		if claims, ok := token.Claims.(*KnoAuthCustomClaims); ok && token.Valid {
+		claims, ok := token.Claims.(*KnoAuthCustomClaims); if ok && token.Valid {
 			log.Printf("%v %v", claims.Username, claims.RegisteredClaims.Issuer)
 		} else {
-			log.Println(err)
-			render.Render(w, r, ErrNotFound)
+			next.ServeHTTP(w, r)
 			return
 		}
+		jwtContextValues := JwtUserValues{
+			Username: claims.Username,
+			Uuid: claims.Uuid,
+		}
+		ctx := context.WithValue(r.Context(), "jwtUserValues", jwtContextValues)
 
-		// Serve the next handler in the chain
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
 type KnoAuthCustomClaims struct {
-	Uuid     string `json:"uuid"`
-	Username string `json:"username"`
+	Uuid     				string `json:"uuid"`
+	Username 				string `json:"username"`
 	jwt.RegisteredClaims
+}
+
+type JwtUserValues struct {
+	Username 	string
+	Uuid		string
 }
 
 type ErrResponse struct {

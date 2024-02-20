@@ -9,7 +9,7 @@ import (
 
 var DB *sql.DB
 
-//var connStr string = "postgres://knostash_user:example@localhost:5432/knostash_db?sslmode=disable"
+// var connStr string = "postgres://knostash_user:example@localhost:5432/knostash_db?sslmode=disable"
 var connStr string = os.Getenv("DB_CONN")
 
 func Open() error {

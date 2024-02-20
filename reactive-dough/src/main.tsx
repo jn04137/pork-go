@@ -9,6 +9,7 @@ import Home from './pages/home'
 import AuthPage from './pages/auth'
 import CreatePostPage from './pages/createpost/createpostpage'
 import ViewPostPage from './pages/viewpostpage'
+import EditPostPage from './pages/editpostpage'
 import MyProfilePage from './pages/myprofile'
 
 import {
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
   {
     path: "/viewpost/:postId",
     element: <ViewPostPage />,
+    loader: postLoader
+  },
+  {
+    path: "/editpost/:postId",
+    element: <EditPostPage />,
     loader: postLoader
   },
 ])

@@ -1,4 +1,4 @@
-module banhbao/porkgo
+module porkgo
 
 go 1.21.1
 

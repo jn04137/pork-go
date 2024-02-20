@@ -13,8 +13,6 @@ import StarterKit from '@tiptap/starter-kit'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 
 const cardBgColor = "[#2e2e2e]"
-//const cardBgColor = "[#1f1b24]"
-//const cardBgColor = "[#414141]"
 
 const fetchFeed = async ({ pageParam }: {pageParam: number}) => {
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/public/getfeedposts/${pageParam}`)
@@ -53,7 +51,6 @@ function Feed() {
    error,
    fetchNextPage,
    hasNextPage,
-   //isFetching,
    isFetchingNextPage,
    status
   } = useInfiniteQuery({
@@ -63,13 +60,9 @@ function Feed() {
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined
   })
 
-  //useEffect(() => {
-  //  if(status === 'success') console.log(data)
-  //}, [])
-
   return(
     <div className="space-y-2.5 w-[550px]">
-      {/* }<div className={`px-4 py-2.5 rounded text-xl dark:bg-${cardBgColor}`}>Feed</div> */}
+      {/* }<div className={`px-4 py-2.5 rounded text-xl dark:bg-${cardBgColor}`}>Feed</div> {*/}
       <div className={`rounded text-xl`}>Feed</div>
       <div className={`rounded px-2 py-2 dark:bg-${cardBgColor}`}>
         <Link to="/createpost">
@@ -208,10 +201,6 @@ function PostCardPoints({postId}: {postId: number}) {
     queryKey: ['postPoints', postId],
     queryFn: getPoints
   })
-
-  ///useEffect(() => {
-  ///  if(pointsQuery.isSuccess) console.log(pointsQuery.data)
-  ///})
 
   const userPointingMutation = useMutation({
     mutationFn: mutatePointsAPI,
