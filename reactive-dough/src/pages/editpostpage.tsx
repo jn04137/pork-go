@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Layout from '../components/layout'
 import axios from 'axios'
 import { 
@@ -14,6 +15,8 @@ import {
 	Dispatch, 
 	SetStateAction 
 } from 'react'
+
+import { loggedInQuery } from '../components/navbar'
 
 interface IPostContent {
   content: IPostData;
@@ -42,6 +45,13 @@ function EditPostPage() {
   const [body, setBody] = useState(content.Body)
   const [title, setTitle] = useState(content.Title)
   const navigate = useNavigate()
+	const { data, isSuccess } = loggedInQuery()
+
+	useEffect(() => {
+		if(isSuccess && data.username !== content.Owner) {
+			navigate("/", { replace: true })
+		}
+	})
   
   let postData = {
     title: title,

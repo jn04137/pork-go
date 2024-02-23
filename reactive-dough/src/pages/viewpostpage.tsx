@@ -369,6 +369,7 @@ function DropDownPostMenu({postId}: {
   postId: number
 }) {
   const [open, setOpen] = useState(false)
+	const navigate = useNavigate()
 
   // Send a request to the backend to delete the post
   async function handleDeleteClick(e: React.SyntheticEvent) {
@@ -379,6 +380,15 @@ function DropDownPostMenu({postId}: {
       console.error(e)
     }
   }
+
+	async function handleEditClick(e: React.SyntheticEvent) {
+		e.preventDefault()
+		try {
+			navigate(`/editpost/${postId}`, { replace: true })
+		} catch(e) {
+			console.error(e)
+		}
+	}
 
   return(
     <Menu as="div" className="relative inline-block text-left text-sm">
@@ -407,6 +417,7 @@ function DropDownPostMenu({postId}: {
           <Menu.Item>
             <a 
               className="block hover:cursor-pointer"
+							onClick={handleEditClick}
             >Edit Post</a>
           </Menu.Item>
         </Menu.Items> 
