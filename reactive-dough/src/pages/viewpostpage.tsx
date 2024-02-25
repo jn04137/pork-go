@@ -432,7 +432,7 @@ function ConfirmDeletePostDialog({open, setOpen, postId}: {
     setOpen: any,
     postId: number
 }) {
-  const cancelButtonRef = useRef()
+	const cancelButtonRef = useRef(null)
   const navigate = useNavigate()
 
 	async function handleDeleteClick(e: React.MouseEvent<HTMLElement>) {
