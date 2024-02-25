@@ -22,10 +22,6 @@ func (a *PostReq) Bind(r *http.Request) error {
 	return nil
 }
 
-type DeletePostModel struct  {
-	PostId string `json:"postId"`
-}
-
 type ListOfPostRes struct {
   ListOfPosts []PostModel `json:"posts"` 
 }

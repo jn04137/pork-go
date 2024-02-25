@@ -55,7 +55,8 @@ function EditPostPage() {
   
   let postData = {
     title: title,
-    body: body
+    body: body,
+		postId: content.PostId
   }
 
 	const handlePublish = async (e: React.MouseEvent) => {
@@ -65,13 +66,13 @@ function EditPostPage() {
       throw new Error("Title wasn't supplied")
     };
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/protected/createpost`, postData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/protected/post/edit`, postData, {
         withCredentials: true
       })
     } catch(e) {
       console.error(e)
     }
-    navigate("/", { replace: true })
+    navigate(`/viewpost/${content.PostId}`, { replace: true })
   }
 
 	return(

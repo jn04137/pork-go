@@ -126,14 +126,13 @@ func ViewPost(w http.ResponseWriter, r *http.Request) {
 func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	jwtUserInfo := r.Context().Value("jwtUserValues").(porkmiddleware.JwtUserValues)
-	var deletePost models.DeletePostModel
+	var deletePost models.PostModel
 	err := json.NewDecoder(r.Body).Decode(&deletePost)
 	if err != nil {
 		log.Printf("This is the error: %v", err)
 		render.Render(w, r, ErrNotFound)
 		return
 	}
-	log.Printf("post id: %v; userId: %v", deletePost.PostId, jwtUserInfo.Uuid)
 
 	query := `UPDATE "UserPost" SET isDeleted=TRUE WHERE ID=$1
 		AND Owner=(SELECT ID FROM "UserAccount" WHERE Uuid=$2)`
@@ -151,6 +150,33 @@ func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, responseData)
 
+}
+
+func EditPostHandler(w http.ResponseWriter, r *http.Request) {
+	jwtUserInfo := r.Context().Value("jwtUserValues").(porkmiddleware.JwtUserValues)
+	var editPost models.PostModel
+	err := json.NewDecoder(r.Body).Decode(&editPost)
+	log.Printf("This is the json data: %v", editPost)
+	if err != nil {
+		log.Printf("This is the error: %v", err)
+		render.Render(w, r, ErrNotFound)
+		return
+	}
+	query := `UPDATE "UserPost" SET Body=$1 WHERE ID=$2
+		AND Owner=(SELECT ID FROM "UserAccount" WHERE Uuid=$3)`
+	
+	_, qErr := db.DB.Exec(query, editPost.Body, editPost.PostId, jwtUserInfo.Uuid); if qErr != nil {
+		log.Printf("This is the query error: %v", qErr)
+		render.Render(w, r, ErrNotFound)
+		return
+	}
+
+	responseData := map[string]string {
+		"message": "post was changed",
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, responseData)
 }
 
 // Checks if post has deleted flag
