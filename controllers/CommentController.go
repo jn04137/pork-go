@@ -126,3 +126,30 @@ func LoadCommentsHandler(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, responseData)
 }
 
+/*
+	Deleting comment should just change the isDeleted flag to true 
+	on the comment
+*/
+func DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
+	
+	responseData := map[string]interface{}{
+		"message": "success",
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, responseData)
+}
+
+/*
+	Should allow the user to change the body of the comment and update the
+	lastUpdated field
+*/
+func EditCommentHandler(w http.ResponseWriter, r *http.Request) {
+
+	responseData := map[string]interface{}{
+		"message": "success",
+	}
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, responseData)
+}
+
