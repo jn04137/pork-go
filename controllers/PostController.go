@@ -74,7 +74,7 @@ func LoadFeedPost(w http.ResponseWriter, r *http.Request) {
 				log.Printf("Rows scan error: %v", err)
 				continue
 			}
-			isPostDeleted(&postScans)
+		isPostDeleted(&postScans)
 		listOfPosts = append(listOfPosts, postScans)
 	}
   rows.Close()
@@ -89,8 +89,10 @@ func LoadFeedPost(w http.ResponseWriter, r *http.Request) {
     responseData["nextCursor"]=nil
   }
 
-	render.Status(r, http.StatusOK)
-	render.JSON(w, r, responseData)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(responseData)
+	return
 }
 
 func ViewPost(w http.ResponseWriter, r *http.Request) {

@@ -5,10 +5,12 @@ import (
 )
 
 type CommentModel struct {
-	Owner     string
-	Body      string
-	PostId    int
-	CreatedAt string
+	Owner     	string
+	Body      	string
+	CommentId		string
+	PostId    	int
+	CreatedAt 	string
+	IsDeleted		bool
 }
 
 type Comment struct {

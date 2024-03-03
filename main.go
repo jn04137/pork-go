@@ -69,8 +69,8 @@ func main() {
 			r.Post("/post/removepoints/{postId}", controllers.RemovePointFromPostHandler)
 			r.Delete("/post/delete", controllers.DeletePostHandler)
 			r.Post("/post/edit", controllers.EditPostHandler)
-			r.Post("/comment/edit/{commentId}", controllers.EditCommentHandler)
-			r.Delete("/comment/delete/{commentId}", controllers.DeleteCommentHandler)
+			r.Post("/comment/edit", controllers.EditCommentHandler)
+			r.Delete("/comment/delete", controllers.DeleteCommentHandler)
 			r.Post("/createcomment/{postId}", controllers.CreateCommentHandler)
 		})
 		r.Route("/public", func(r chi.Router) {
