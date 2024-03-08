@@ -10,7 +10,7 @@ function Layout({children}: {children: any}) {
           <main className="w-full">{children}</main>
         </div>
       </div>
-      <div className="flex justify-center py-2">
+      <div className="flex justify-center py-2 bg-[#333333]">
         <div className="min-w-[1000px] text-sm">
           <Footer/>
         </div>

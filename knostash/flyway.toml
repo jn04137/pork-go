@@ -19,6 +19,13 @@ filterFile = "filter.rgf"
 [redgateCompare.postgres.options.ignores]
 ignoreNewlinesInTextObjects = "off"
 
+[environments.default]
+url = "jdbc:postgresql://localhost:5432/knostash_db"
+schemas = [ "public" ]
+displayName = "knostash_user"
+user = "knostash_user"
+password = "example"
+
 [environments.DigitalOceanDroplet]
 url = "jdbc:postgresql://159.203.169.44:5432/satch3l"
 schemas = [ "public" ]
