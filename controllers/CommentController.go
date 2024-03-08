@@ -8,9 +8,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"encoding/json"
 
 	"porkgo/db"
 	"porkgo/models"
+	"porkgo/porkmiddleware"
 )
 
 func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
@@ -79,6 +81,7 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	responseData := map[string]interface{}{
 		"message": "was a success",
 	}
+	
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, responseData)
 }
@@ -90,7 +93,7 @@ func LoadCommentsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("There was an error reading the commentCursor")
 	}
 
-	query := `SELECT ua.Username, c.Body, c.CreatedAt FROM "CommentOnPost" as cop
+	query := `SELECT ua.Username, c.Id, c.Body, c.CreatedAt, c.IsDeleted FROM "CommentOnPost" as cop
 		INNER JOIN "Comment" as c ON cop.CommentId=c.ID
 		INNER JOIN "UserAccount" as ua ON ua.ID=c.Owner
 		WHERE cop.PostId=$1
@@ -108,10 +111,14 @@ func LoadCommentsHandler(w http.ResponseWriter, r *http.Request) {
 		var commentScans models.CommentModel
 		if rowsErr := rows.Scan(
 			&commentScans.Owner,
+			&commentScans.CommentId,
 			&commentScans.Body,
-			&commentScans.CreatedAt); rowsErr != nil {
+			&commentScans.CreatedAt,
+			&commentScans.IsDeleted); rowsErr != nil {
 			log.Printf("Rows scan error: %v", rowsErr)
+			continue
 		}
+		isCommentDeleted(&commentScans)
 		listOfComments = append(listOfComments, commentScans)
 	}
 	responseData := map[string]interface{}{
@@ -122,7 +129,69 @@ func LoadCommentsHandler(w http.ResponseWriter, r *http.Request) {
 		responseData["nextCursor"] = nil
 	}
 
-	render.Status(r, http.StatusOK)
-	render.JSON(w, r, responseData)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(responseData)
+	return
+}
+
+/*
+	Deleting comment should just change the isDeleted flag to true 
+	on the comment
+*/
+func DeleteCommentHandler(w http.ResponseWriter, r *http.Request) {
+	jwtUserInfo := r.Context().Value("jwtUserValues").(porkmiddleware.JwtUserValues)
+	var commentModel models.CommentModel
+	err := json.NewDecoder(r.Body).Decode(&commentModel)
+	if err != nil {
+		log.Printf("This is the error: %v", err)
+		render.Render(w, r, ErrNotFound)
+		return
+	}
+
+	query := `UPDATE "Comment" SET isDeleted=TRUE 
+		WHERE ID=$1 and Owner=(SELECT ID FROM "UserAccount" WHERE Uuid=$2)`
+	
+	responseData := map[string]interface{}{
+		"message": "success",
+	}
+	
+	_, qErr := db.DB.Exec(query, commentModel.CommentId, jwtUserInfo.Uuid); if qErr != nil {
+		log.Printf("This is the query error: %v", qErr)
+		render.Render(w, r, ErrNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(responseData)
+	return
+}
+
+/*
+	Should allow the user to change the body of the comment and update the
+	lastUpdated field
+*/
+func EditCommentHandler(w http.ResponseWriter, r *http.Request) {
+
+	responseData := map[string]interface{}{
+		"message": "success",
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(responseData)
+	return
+}
+
+// Checks if comment has deleted flag
+// comment prints as if deleted if flag is true
+func isCommentDeleted(comment *models.CommentModel) *models.CommentModel {
+	if comment.IsDeleted {
+		comment.Body = "Deleted Comment"
+		comment.Owner = "Anonymous User"
+	}
+
+	return comment
 }
 

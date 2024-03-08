@@ -10,20 +10,9 @@ function MyProfilePage() {
       <div>
         <h1 className="text-2xl">My Profile</h1>
       </div>
-      <div>
-        List of posts
-      </div>
-      <div>
-        <div className="w-52">
-          <PostCard 
-            title={"Some title"}
-            body={"Content here"}
-            author={"Jonathan Nguyen"}
-            date={(new Date()).toDateString()}
-            postId={1}
-          /> 
-        </div>
-      </div>
+				<p className="h-full grow items-center flex items-center">
+					Profile Page coming soon 
+				</p>
     </Layout>
   )
 }
@@ -39,7 +28,6 @@ interface IPostCardData {
 
 const cardBgColor = "[#2e2e2e]"
 export function PostCard({title, body, author, date, postId}: IPostCardData) {
-  //let instance = new Date()
   
   return(
     <div className={`dark:bg-${cardBgColor} rounded px-4 py-2`}>
