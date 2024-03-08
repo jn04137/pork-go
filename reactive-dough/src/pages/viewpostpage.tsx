@@ -6,15 +6,16 @@ import axios from 'axios'
 import Layout from '../components/layout'
 import { IPostData } from './home'
 import {
-  EditorContent,
-  useEditor
 } from '@tiptap/react'
 import Placeholder from '@tiptap/extension-placeholder'
 import React, {
   useState,
 } from 'react'
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
+import { 
+  EditorContent,
+  useEditor
+} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 
@@ -239,7 +240,10 @@ function CommentCard({commentId, body, author, date}: ICommentCardProps) {
 				{
 					isSuccess
 					&& data.username === author
-					&& <DropDownCommentMenu commentId={commentId} />
+					&& <DropDownCommentMenu 
+						commentId={commentId} 
+						editable={editable} 
+						setEditable={setEditable} />
 				}
 			</div>
     </div>
@@ -248,21 +252,22 @@ function CommentCard({commentId, body, author, date}: ICommentCardProps) {
 
 function TipTap({content, editable}: {
 	content: string,
-	editable: boolean,
+	editable?: boolean
 }) {
   const extensions = [
-    StarterKit
+    StarterKit,
   ]
+	const editor = useEditor({
+		extensions,
+		content,
+	})
+
+	if(editable !== undefined) {
+		editor?.setEditable(editable)
+	}
 
   return (
-    <EditorProvider
-      extensions={extensions}
-      content={content}
-      editable={editable}
-    >
-      <BubbleMenu>This is the bubble menu</BubbleMenu>
-      <FloatingMenu>This is the floating menu</FloatingMenu>
-    </EditorProvider>
+		<EditorContent editor={editor}/>
   )
 }
 
@@ -292,7 +297,7 @@ export function PostCard({title, body, author, date, postId}: IPostCardData) {
         }
       </div>
       <div className='pt-1 pb-2 text-sm h-fit'>
-        <TipTap content={body}/>
+				<TipTap content={body} />
       </div>
       <div className="flex justify-between">
         <div className='flex flex-col text-xs'>

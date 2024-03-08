@@ -1,7 +1,8 @@
 import { 
 	useState,
 	Fragment,
-	useRef
+	useRef,
+	Dispatch
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -17,11 +18,13 @@ import axios from 'axios'
 
 const apiURL = import.meta.env.VITE_API_URL
 
-function DropDownCommentMenu({commentId}: {
-  commentId: number
+function DropDownCommentMenu({commentId, editable, setEditable}: {
+  commentId: number,
+	editable: boolean,
+	setEditable: Dispatch<boolean>
 }) {
   const [open, setOpen] = useState(false)
-	const navigate = useNavigate()
+	//const navigate = useNavigate()
 
   // Send a request to the backend to delete the post
   async function handleDeleteClick(e: React.SyntheticEvent) {
@@ -36,7 +39,8 @@ function DropDownCommentMenu({commentId}: {
 	async function handleEditClick(e: React.SyntheticEvent) {
 		e.preventDefault()
 		try {
-			navigate(`/editpost/${commentId}`, { replace: true })
+			setEditable(!editable)
+			setOpen(false)
 		} catch(e) {
 			console.error(e)
 		}
